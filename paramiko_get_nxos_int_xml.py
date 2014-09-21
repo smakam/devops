@@ -66,6 +66,7 @@ if __name__ == '__main__':
     # Now let's try to send the router a command
     remote_conn.send("\n")
 
+    # Get output in xml format
     remote_conn.send("show int brief | xml \n")
 
     # Wait for the command to complete
@@ -74,8 +75,9 @@ if __name__ == '__main__':
     output = remote_conn.recv(50000)
 
     # See what we have
-    print output
+    #print output
 
+    # Parse the output to get only relevant XML section
     output1 = re.findall("\<\?xml.*reply\>", output, re.DOTALL)
 
     # Strip namespaces

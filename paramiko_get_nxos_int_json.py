@@ -65,6 +65,7 @@ if __name__ == '__main__':
     # Now let's try to send the router a command
     remote_conn.send("\n")
 
+    # Get output in json format
     remote_conn.send("show int brief | json \n")
 
     # Wait for the command to complete
@@ -72,7 +73,7 @@ if __name__ == '__main__':
     
     output = remote_conn.recv(50000)
 
-    print 'output', output
+    #print 'output', output
 
     # Get second line which is the json output
     output = output.split("\n")[2]
