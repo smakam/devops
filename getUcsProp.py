@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # This script retrieve all the UCS Manager Faults.
-# Usage: getFaults.py [options]
+# Usage: getUcsInfo.py [options]
 #
 # Options:
 # -h, --help            show this help message and exit
