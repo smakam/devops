@@ -1,0 +1,14 @@
+---
+- name: Get Existing UCS Information
+  hosts: ucs
+  connection: local
+  gather_facts: no
+
+  tasks: 
+    - name: Pull generic data from UCS
+      getucsinfo:
+        host={{ inventory_hostname }}
+        ucs_user="admin"
+        ucs_pass="------"
+        outputfile=output.txt
+        logfile=log.txt
