@@ -9,6 +9,6 @@
       getucsinfo:
         host={{ inventory_hostname }}
         ucs_user="admin"
-        ucs_pass="Nbv12345"
+        ucs_pass="------"
         outputfile=output.txt
         logfile=log.txt
