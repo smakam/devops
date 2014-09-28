@@ -1,0 +1,18 @@
+---
+hostname: testrouter
+
+ntpServer: 
+  - 10.1.1.1
+  - 11.1.1.1
+
+vlans:
+  100: accessvlan
+  200: trunkvlan
+
+misc:
+  defaultgw: 40.1.1.1
+  snmp:
+    user: admin
+    trap:
+      trapServer: 1.1.1.1
+      version: 3

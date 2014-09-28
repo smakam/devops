@@ -1,0 +1,17 @@
+conf
+#hostname config
+hostname {{ config['hostname'] }}
+# ntp server config
+{% for server in config['ntpServer']%}
+ntp server {{ server }}
+{% endfor %}
+#vlan config
+{% for id, name in config['vlans']|dictsort -%}
+vlan {{ id }}
+    name {{ name }}
+{% endfor %}
+#default gateway
+ip route 0.0.0.0 0.0.0.0 {{ config['misc']['defaultgw'] }}
+#snmp parameters
+snmp-server user {{ config['misc']['snmp']['user'] }} 
+snmp-server host {{ config['misc']['snmp']['trap']['trapServer'] }} version {{ config['misc']['snmp']['trap']['version'] }}
