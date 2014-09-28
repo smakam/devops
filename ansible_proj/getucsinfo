@@ -1,0 +1,132 @@
+#!/usr/bin/python
+
+DOCUMENTATION = '''
+---
+module: getucsinfo
+version_added: 0.1
+short_description: UCS geninfo retriever
+description:
+   - Retrieves generic ucs info
+author: Sreenivas Makam
+'''
+
+import getpass
+import optparse
+from UcsSdk import *
+#sys.path.append('.')
+#import getUcsProp
+from getUcsProp import *
+
+EXAMPLES = '''
+TBD
+'''
+
+import os
+
+def getucsinfo(module):
+
+    results = {}
+
+    outputfile = module.params['outputfile']
+    outputfile = os.path.abspath(outputfile)
+
+    results['outputfile'] = outputfile
+
+    results['changed'] = False
+
+    try:
+        #Connect to UCSM
+        handle = UcsHandle()
+        handle.Login(module.params['host'], username=module.params['ucs_user'], password=module.params['ucs_pass'])
+
+        f = open(module.params['host'], 'w')
+        f.write("----Properties----\n")
+                            
+        temp_str = "device:" + module.params['host'] + "\n"
+        f.write(temp_str)
+        
+        # Get Ethernet Mode
+        ethmode = getEthernetMode(handle)
+        temp_str = " mode:" + ethmode + "\n"
+        f.write(temp_str)
+        
+        # Get software version
+        version = getSwVersion(handle)
+        temp_str = " Software version:" + version + "\n"
+        f.write(temp_str)
+
+        # Get cluster/standalone
+        hamode = getHaMode(handle)
+        temp_str = " Mode:" + hamode + "\n"
+        f.write(temp_str)
+        
+        # Get FI model for A
+        fimodel = getFiModel(handle, hamode)
+        temp_str =  "fia-model:" + fimodel[0] + "\n"
+        f.write(temp_str)
+        
+        if (hamode == 'cluster'):
+            temp_str =  "fib-model:" +  fimodel[1] + "\n"
+            f.write(temp_str)
+
+        # Get chassis and servers
+        chassismodel, servermodel = getBladeDetail(handle)
+        temp_str =  "Blade chassis:" + "\n"
+        f.write(temp_str)
+        i = 0
+        while (i < len(chassismodel)):
+            temp_str = chassismodel[i] + "\n"
+            f.write(temp_str)
+            i = i + 1
+
+        
+        temp_str = "Blade servers:" + "\n"
+        i = 0
+        while (i < len(servermodel)):
+            temp_str = temp_str + servermodel[i] + "\n"
+            i = i + 1
+        f.write(temp_str)
+        
+        # Get rack servers
+        rackmodel = getRackDetail(handle)
+        temp_str = "Rack servers:" + "\n"
+        i = 0
+        while (i < len(rackmodel)):
+            temp_str = temp_str + rackmodel[i] + "\n"
+            i = i + 1
+        f.write(temp_str)
+
+        # cleanup
+        f.close()
+        handle.Logout()
+
+    except Exception, err:
+        handle.Logout()
+        print "Exception:", str(err)
+        import traceback, sys
+        print '-'*60
+        traceback.print_exc(file=sys.stdout)
+        print '-'*60
+
+    return results
+
+def main():
+    module = AnsibleModule(
+     argument_spec = dict(
+      host=dict(required=True),
+      ucs_user=dict(required=True),
+      ucs_pass=dict(required=True),
+      outputfile=dict(required=True),
+      override=dict(required=False, default=False),
+      logfile=dict(required=False, default=None),
+      timeout=dict(required=False, default=0)
+         ),
+         supports_check_mode = False
+    )
+
+    results = getucsinfo(module)
+
+    module.exit_json(**results)
+
+from ansible.module_utils.basic import *
+main()
