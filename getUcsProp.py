@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This script retrieve all the UCS Manager Faults.
-# Usage: getFaults.py [options]
+# This script retrieves UCS inventory
+# Usage: getUcsProp.py [options]
 #
 # Options:
 # -h, --help            show this help message and exit
