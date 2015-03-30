@@ -7,6 +7,9 @@ from onep.interfaces import InterfaceFilter
 import optparse
 import sys
   
+# This program connects to Cisco ONEPK device using TLS pinning option and displays information 
+# about the Network element. Reference from https://communities.cisco.com/thread/44820
+
 # TLS Connection (This is the TLS Pinning Handler)  
 class PinningHandler(tlspinning.TLSUnverifiedElementHandler):  
     def __init__(self, pinning_file):  
@@ -39,7 +42,7 @@ if __name__ == '__main__':
         options.password=getpassword("Password:")
 
         
-    # Setup a connection config with TSL pinning handler
+    # Setup a connection config with TLS pinning handler
     config = SessionConfig(None)  
     config.set_tls_pinning('', PinningHandler(''))  
     config.transportMode = SessionConfig.SessionTransportMode.TLS  
